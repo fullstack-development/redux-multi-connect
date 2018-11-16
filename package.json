@@ -27,6 +27,10 @@
     "typescript": "^3.1.6"
   },
   "dependencies": {
+    "@types/prop-types": "^15.5.6",
+    "@types/react": "^16.7.4",
+    "@types/react-redux": "^6.0.8",
+    "@types/uuid": "^3.4.4",
     "decko": "^1.2.0",
     "prop-types": "^15.6.2",
     "react": "^16.6.3",

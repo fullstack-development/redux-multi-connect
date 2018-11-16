@@ -1,4 +1,4 @@
-import { Action } from './namespace';
+import { Action, KeyPathToState } from './namespace';
 
 function insertStateByKeyPath(state: any, keyPath: string[], instanceKey: string, instanceState: any): any {
   const keyPathToState = [...keyPath];

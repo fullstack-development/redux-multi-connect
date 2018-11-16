@@ -9,9 +9,10 @@
     "declaration": true,
     "baseUrl": "./src",
     "outDir": "./dist",
-    "lib": ["es2015", "es2017", "es6", "es7", "es5"],
+    "lib": ["es2015", "es2017", "es6", "es7", "es5", "dom"],
+    "jsx": "react",
+    "experimentalDecorators": true,
     "esModuleInterop": true,
-    "strict": true
   },
   "include": [
     "src/**/*"
