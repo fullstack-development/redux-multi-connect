@@ -20,7 +20,7 @@ export interface IAddInstance {
   payload: {
     instanceKey: string,
     initialState: any,
-    keyPathToState: string[],
+    keyPathToState: KeyPathToState[],
   };
 }
 
@@ -28,7 +28,7 @@ export interface IRemoveInstance {
   type: '@@MULTI_CONNECT:REMOVE_INSTANCE';
   payload: {
     instanceKey: string,
-    keyPathToState: string[],
+    keyPathToState: KeyPathToState[],
   };
 }
 
