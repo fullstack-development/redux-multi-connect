@@ -18,11 +18,17 @@ yarn add @fsd/redux-multi-connect
 ```
 ## API
 This helper takes on the responsibility of parallelizing the state features and allows you to quickly make a multi-instance feature out of a regular feature and vice versa.
-`reducer` - an auxiliary reducer to be connected to the redux-store. Creates and deletes feature instance branches.
+`reducer(state: any, action: Action)` - an auxiliary reducer to be connected to the redux-store. Creates and deletes feature instance branches.
 
-`multiReducer` - decorator, in which you need to wrap the reducer features. Controls the operation of the feature reducer on the state branches for specific instances.
+`multiReducer(reducer: Reducer<IReduxState>)` - decorator, in which you need to wrap the reducer features. Controls the operation of the feature reducer on the state branches for specific instances.
 
-`multiConnect` - HOC, which is used instead of `connect`.
+`<IAppReduxState, TReduxState, TStateProps, TDispatchProps, TOwnProps>multiConnect` - HOC, which is used instead of `connect`, accepts the same parameters:
+```typescript
+keyPathToState: Array<keyof IAppReduxState>,
+initialState: TReduxState,
+mapStateToProps: MapStateToProps<IAppReduxState, TReduxState, TStateProps, TOwnProps>,
+mapDispatchToProps?: MapDispatchToProps<TDispatchProps, TOwnProps>,
+```
 
 `IMultiConnectProps` - used to typify the container's `props` in case an instance key is needed inside the container.
 
