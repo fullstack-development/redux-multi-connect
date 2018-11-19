@@ -4,18 +4,23 @@ import * as uuid from 'uuid';
 import { bind } from 'decko';
 import { Store, Dispatch, bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { Omit } from '_helpers';
+
+import { IAppReduxState } from 'shared/types/app';
+import { IMultiAction } from 'shared/types/redux';
 
 import { addInstance, removeInstance } from './actions';
-import { MapStateToProps, MapDispatchToProps, IMultiConnectProps, Omit, IMultiAction } from './namespace';
+import { MapStateToProps, MapDispatchToProps, IMultiConnectProps } from './namespace';
 
+type FeatureName = keyof IAppReduxState;
 type MultiComponent<P> = React.ComponentClass<P & IMultiConnectProps>;
 
 const mountedContainersForInstance: { [key: string]: number } = {};
 
-const multiConnect = <IAppReduxState, TReduxState, TStateProps, TDispatchProps, TOwnProps>(
-  keyPathToState: Array<keyof IAppReduxState>,
+const multiConnect = <TReduxState, TStateProps, TDispatchProps, TOwnProps>(
+  keyPathToState: FeatureName[],
   initialState: TReduxState,
-  mapStateToProps: MapStateToProps<IAppReduxState, TReduxState, TStateProps, TOwnProps>,
+  mapStateToProps: MapStateToProps<TReduxState, TStateProps, TOwnProps>,
   mapDispatchToProps?: MapDispatchToProps<TDispatchProps, TOwnProps>,
 ) => {
   type IWrappedComponentProps = TStateProps & TDispatchProps;
@@ -35,7 +40,7 @@ const multiConnect = <IAppReduxState, TReduxState, TStateProps, TDispatchProps, 
       constructor(props: Props, context?: any) {
         super(props, context);
 
-        this.instanceKey = (this.props.instanceKey as string) || uuid.v1();
+        this.instanceKey = (this.props.instanceKey as string) || uuid();
 
         const mountedContainers = mountedContainersForInstance[this.instanceKey] || 0;
         mountedContainersForInstance[this.instanceKey] = mountedContainers + 1;

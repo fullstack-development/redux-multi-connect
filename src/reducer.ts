@@ -1,8 +1,8 @@
-import { Action, KeyPathToState } from './namespace';
+import { Action } from './namespace';
 
-function insertStateByKeyPath(state: any, keyPath: KeyPathToState[], instanceKey: string, instanceState: any): any {
+function insertStateByKeyPath(state: any, keyPath: string[], instanceKey: string, instanceState: any): any {
   const keyPathToState = [...keyPath];
-  const key: KeyPathToState | undefined = keyPathToState.shift();
+  const key: string | undefined = keyPathToState.shift();
   if (!(state instanceof Object)) {
     return state;
   }

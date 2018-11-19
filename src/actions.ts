@@ -1,13 +1,13 @@
-import { IAddInstance, IRemoveInstance, KeyPathToState } from './namespace';
+import { IAddInstance, IRemoveInstance } from './namespace';
 
-export function addInstance(instanceKey: string, initialState: any, keyPathToState: KeyPathToState[]): IAddInstance {
+export function addInstance(instanceKey: string, initialState: any, keyPathToState: string[]): IAddInstance {
   return {
     type: '@@MULTI_CONNECT:ADD_INSTANCE',
     payload: { initialState, instanceKey, keyPathToState },
   };
 }
 
-export function removeInstance(instanceKey: string, keyPathToState: KeyPathToState[]): IRemoveInstance {
+export function removeInstance(instanceKey: string, keyPathToState: string[]): IRemoveInstance {
   return {
     type: '@@MULTI_CONNECT:REMOVE_INSTANCE',
     payload: { instanceKey, keyPathToState },
