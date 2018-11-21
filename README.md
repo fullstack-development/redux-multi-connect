@@ -100,10 +100,10 @@ type ILoadCities<T = 'SELECT_GEO:LOAD_CITIES'> = IAction<T, IGeoCountry> & IMult
 function* loadCities({ api }: IDependencies, { payload: country, _instanceKey }: ILoadCities) {
   try {
     const cities: IGeoCity[] = yield call(api.geo.loadCities, country);
-    yield put({ ...actions.loadCitiesSuccess(cities), _instanceKey }); // дополняем экшен полем _instanceKey
+    yield put({ ...actions.loadCitiesSuccess(cities), _instanceKey }); // supplement the action with the _instanceKey
   } catch (error) {
     const msg = getMessage(error);
-    yield put({ ...actions.loadCitiesFail(msg), _instanceKey }); // дополняем экшен полем _instanceKey
+    yield put({ ...actions.loadCitiesFail(msg), _instanceKey }); // supplement the action with the _instanceKey
   }
 }
 ```
