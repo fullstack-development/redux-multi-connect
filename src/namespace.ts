@@ -35,7 +35,6 @@ export interface IRemoveInstance {
 export type Action = IAddInstance | IRemoveInstance;
 
 export type KeyPathToState = string | number | symbol;
-
 export type ReactComponent<TProps> = React.ComponentClass<TProps> | React.StatelessComponent<TProps>;
 
 export type MapToState<TReduxState> = (state: any) => IMultiInstanceState<TReduxState>;
