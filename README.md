@@ -18,6 +18,7 @@ yarn add @fsd/redux-multi-connect
 ```
 ## API
 This helper takes on the responsibility of parallelizing the state features and allows you to quickly make a multi-instance feature out of a regular feature and vice versa.
+
 `reducer(state: any, action: Action)` - an auxiliary reducer to be connected to the redux-store. Creates and deletes feature instance branches.
 
 `multiReducer(reducer: Reducer<IReduxState>)` - decorator, in which you need to wrap the reducer features. Controls the operation of the feature reducer on the state branches for specific instances.
@@ -42,7 +43,7 @@ export interface IAppReduxState {
   ...
 }
 ```
-3. Wrap a reducer features in `multiReducer`.
+1. Wrap a feature reducer in `multiReducer`.
 ```typescript
 export default (
   multiReducer(
@@ -85,8 +86,8 @@ export default (
   )
 );
 ```
-5. Rewriting selectors with respect to state features, since `mapStateToProps` now accepts a feature instance instance.
-6. If there are sagas in the feature and action games are displayed in them, then these actions must be supplemented with the `_instanceKey` field, the value of which can be obtained from the action intercepted by the saga.
+1. Rewriting selectors with respect to state features, since `mapStateToProps` now accepts a feature instance.
+2. If there are sagas in the feature and action games are displayed in them, then these actions must be supplemented with the `_instanceKey` field, the value of which can be obtained from the action intercepted by the saga.
 ```typescript
 // the action interface is inherited from IMultiAction in one of the ways
 interface ILoadCities extends IMultiAction {
@@ -109,9 +110,9 @@ function* loadCities({ api }: IDependencies, { payload: country, _instanceKey }:
 ```
 At the time the container is drawn, the instance is created in the redux stack. The key by which the instance state will be available is automatically generated at the time of drawing, but it is possible to set this key from the outside, passing the `instanceKey`.
 ### Is it possible to make two containers work with one branch of state?
-Yes. It is necessary to generate the key in the common ancestor of the containers of the features, and transfer it to the instanceKey to the containers of interest to us. This will prevent automatic key generation, on the first mount an instance branch will be created in redux stete, on the last unmount this branch will be deleted.
+Yes. It is necessary to generate the key in the common ancestor of the containers of the features, and transfer it to the instanceKey to the containers of interest to us. This will prevent automatic key generation, on the first mount an instance branch will be created in redux state, on the last unmount this branch will be deleted.
 ```typescript
-import { SearchPanel, SearchPaginator } from 'features/search';
+import { SearchPanel, SearchPagination } from 'features/search';
 
 const SEARCH_KEY: string = 'search-in-main-page';
 
@@ -121,7 +122,7 @@ class MainPage extends React.PureComponent<Props, {}> {
       <div>
         <SearchPanel instanceKey={SEARCH_KEY} />
         ...
-        <SearchPaginator instanceKey={SEARCH_KEY} />
+        <SearchPagination instanceKey={SEARCH_KEY} />
       </div>
     );
   }
