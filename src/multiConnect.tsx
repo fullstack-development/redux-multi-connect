@@ -1,7 +1,6 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import * as uuid from 'uuid';
-import { bind } from 'decko';
 import { Store, Dispatch, bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
@@ -45,6 +44,10 @@ const multiConnect = <IAppReduxState, TReduxState, TStateProps, TDispatchProps, 
           this.mapStateToProps,
           mapDispatchToProps ? this.mapDispatchToProps : null as any,
         )(WrappedComponent);
+
+        this.mapStateToProps = this.mapStateToProps.bind(this);
+        this.mapDispatchToProps = this.mapDispatchToProps.bind(this);
+        this.actionDecorator = this.actionDecorator.bind(this);
       }
 
       public componentWillUnmount() {
@@ -61,14 +64,12 @@ const multiConnect = <IAppReduxState, TReduxState, TStateProps, TDispatchProps, 
         return <ConnectedComponent instanceKey={this.instanceKey} {...this.props as any} />;
       }
 
-      @bind
       private mapStateToProps(appState: IAppReduxState, ownProps?: TOwnProps): TStateProps {
         const state = keyPathToState.reduce((prev, cur) => prev ? prev[cur] : prev, appState as any);
         const instanceState = state ? state[this.instanceKey] : {};
         return mapStateToProps(instanceState, appState, ownProps);
       }
 
-      @bind
       private mapDispatchToProps(dispatch: Dispatch<any>, ownProps?: TOwnProps): TDispatchProps {
         if (!mapDispatchToProps) { return ({} as TDispatchProps); }
 
@@ -76,7 +77,6 @@ const multiConnect = <IAppReduxState, TReduxState, TStateProps, TDispatchProps, 
         return bindActionCreators(actions as any, dispatch);
       }
 
-      @bind
       private actionDecorator(action: IMultiAction<string>): IMultiAction<string> {
         action._instanceKey = this.instanceKey;
         return action;
