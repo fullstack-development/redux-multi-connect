@@ -1,26 +1,20 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import * as uuid from 'uuid';
-import { bind } from 'decko';
 import { Store, Dispatch, bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Omit } from '_helpers';
-
-import { IAppReduxState } from 'shared/types/app';
-import { IMultiAction } from 'shared/types/redux';
 
 import { addInstance, removeInstance } from './actions';
-import { MapStateToProps, MapDispatchToProps, IMultiConnectProps } from './namespace';
+import { MapStateToProps, MapDispatchToProps, IMultiConnectProps, Omit, IMultiAction } from './namespace';
 
-type FeatureName = keyof IAppReduxState;
 type MultiComponent<P> = React.ComponentClass<P & IMultiConnectProps>;
 
 const mountedContainersForInstance: { [key: string]: number } = {};
 
-const multiConnect = <TReduxState, TStateProps, TDispatchProps, TOwnProps>(
-  keyPathToState: FeatureName[],
+const multiConnect = <IAppReduxState, TReduxState, TStateProps, TDispatchProps, TOwnProps>(
+  keyPathToState: Array<keyof IAppReduxState>,
   initialState: TReduxState,
-  mapStateToProps: MapStateToProps<TReduxState, TStateProps, TOwnProps>,
+  mapStateToProps: MapStateToProps<IAppReduxState, TReduxState, TStateProps, TOwnProps>,
   mapDispatchToProps?: MapDispatchToProps<TDispatchProps, TOwnProps>,
 ) => {
   type IWrappedComponentProps = TStateProps & TDispatchProps;
@@ -40,7 +34,7 @@ const multiConnect = <TReduxState, TStateProps, TDispatchProps, TOwnProps>(
       constructor(props: Props, context?: any) {
         super(props, context);
 
-        this.instanceKey = (this.props.instanceKey as string) || uuid();
+        this.instanceKey = (this.props.instanceKey as string) || uuid.v1();
 
         const mountedContainers = mountedContainersForInstance[this.instanceKey] || 0;
         mountedContainersForInstance[this.instanceKey] = mountedContainers + 1;
@@ -50,6 +44,10 @@ const multiConnect = <TReduxState, TStateProps, TDispatchProps, TOwnProps>(
           this.mapStateToProps,
           mapDispatchToProps ? this.mapDispatchToProps : null as any,
         )(WrappedComponent);
+
+        this.mapStateToProps = this.mapStateToProps.bind(this);
+        this.mapDispatchToProps = this.mapDispatchToProps.bind(this);
+        this.actionDecorator = this.actionDecorator.bind(this);
       }
 
       public componentWillUnmount() {
@@ -66,14 +64,12 @@ const multiConnect = <TReduxState, TStateProps, TDispatchProps, TOwnProps>(
         return <ConnectedComponent instanceKey={this.instanceKey} {...this.props as any} />;
       }
 
-      @bind
       private mapStateToProps(appState: IAppReduxState, ownProps?: TOwnProps): TStateProps {
         const state = keyPathToState.reduce((prev, cur) => prev ? prev[cur] : prev, appState as any);
         const instanceState = state ? state[this.instanceKey] : {};
         return mapStateToProps(instanceState, appState, ownProps);
       }
 
-      @bind
       private mapDispatchToProps(dispatch: Dispatch<any>, ownProps?: TOwnProps): TDispatchProps {
         if (!mapDispatchToProps) { return ({} as TDispatchProps); }
 
@@ -81,7 +77,6 @@ const multiConnect = <TReduxState, TStateProps, TDispatchProps, TOwnProps>(
         return bindActionCreators(actions as any, dispatch);
       }
 
-      @bind
       private actionDecorator(action: IMultiAction<string>): IMultiAction<string> {
         action._instanceKey = this.instanceKey;
         return action;

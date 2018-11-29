@@ -1,5 +1,4 @@
-import { IMultiInstanceState } from './namespace';
-import { IMultiAction } from 'shared/types/redux';
+import { IMultiInstanceState, IMultiAction } from './namespace';
 
 type Reducer<TReduxState> = (instanceState: TReduxState, action: IMultiAction<string>) => TReduxState;
 
