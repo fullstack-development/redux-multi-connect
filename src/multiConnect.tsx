@@ -22,6 +22,9 @@ const multiConnect = <IAppReduxState, TReduxState, TStateProps, TDispatchProps, 
   return function HOC<TOwn extends TOwnProps & IWrappedComponentProps>(WrappedComponent: React.ComponentType<TOwn>): MultiComponent<Omit<TOwn, keyof IWrappedComponentProps>> {
     type Props = Omit<TOwn, keyof IWrappedComponentProps> & IMultiConnectProps;
     class MultiConnector extends React.PureComponent<Props> {
+      public static contextTypes = {
+        store: PropTypes.object,
+      };
       public context!: { store: Store<IAppReduxState> };
       public displayName: string = `(MultiConnect) ${WrappedComponent.displayName}`;
 
